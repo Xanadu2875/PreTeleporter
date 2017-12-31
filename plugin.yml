@@ -1,0 +1,35 @@
+name: PreTeleporter
+main: xanadu2875\preteleporter\PreTeleporter
+version: 0.1.0
+api:
+- 2.0.0
+- 3.0.0
+- 3.0.0-ALPHA1
+- 3.0.0-ALPHA2
+- 3.0.0-ALPHA3
+- 3.0.0-ALPHA4
+- 3.0.0-ALPHA5
+- 3.0.0-ALPHA6
+- 3.0.0-ALPHA7
+- 3.0.0-ALPHA8
+- 3.0.0-ALPHA9
+- 3.0.0-ALPHA10
+author: Xanadu2875
+description: あらかじめ設定された場所にGUIを使いテレポートできます
+website: https://forum.pmmp.ga/d/42-preteleporter
+
+permission:
+  preteleporter.*:
+    default: op
+    description:
+      children:
+        preteleporter.command.*:
+          default: op
+          description:
+          children:
+            preteleporter.command.ptp:
+              default: true
+              description:
+            preteleporter.command.setptp:
+              default: op
+              description:
