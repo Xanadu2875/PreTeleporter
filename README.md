@@ -12,7 +12,7 @@ PMMPプラグインです(Written in PHP)
 
 ## Demo
 
-[YouTube]()
+[YouTube](https://youtu.be/fnsHLgtt6SQ)
 
 ## PreTeleporter commands
 
