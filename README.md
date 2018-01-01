@@ -35,14 +35,16 @@ PreTeleporter::getInstance()->addCo($name, $x, $y, $z, $level);
 
 ```php
 PreTeleporter::addCo(string $name, int $x, int $y, int $z, pocketmine\level\Level $level): bool
-PreTeleporter::sendTPTUI(Player $player):bool
+PreTeleporter::sendTPTUI(Player $player): bool
 ```
 
 ## Author
 
-[Twitter @xanadu2875](https://twitter.com/xanadu2875)
+Twitter
+[@xanadu2875](https://twitter.com/xanadu2875)
 
-[Lobi 1a8ca](https://web.lobi.co/user/1a8ca6d4fdd1d87e0f26c68e18f08de6413f7d36)
+Lobi
+[1a8ca](https://web.lobi.co/user/1a8ca6d4fdd1d87e0f26c68e18f08de6413f7d36)
 
 ## License
 
