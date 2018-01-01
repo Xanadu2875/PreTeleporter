@@ -36,7 +36,7 @@ class SetPTPCommand extends command\PluginCommand
         {
           if(!isset($args[$i])) return false;
         }
-        if($level = $this->getLevelByName($args[4]))
+        if($level = $this->getPlugin()->getServer()->getLevelByName($args[4]))
         {
           if(!$this->getPlugin()->addCo($args[0], (int)$args[1], (int)$args[2], (int)$args[3], $level))
           {
@@ -45,6 +45,7 @@ class SetPTPCommand extends command\PluginCommand
           }
         }
       }
+      $sender->sendMessage("登録しました");
       return true;
     }
     return false;

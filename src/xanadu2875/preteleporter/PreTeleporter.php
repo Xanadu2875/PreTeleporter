@@ -2,7 +2,7 @@
 
 /**
  * @author  Xanadu2875
- * @version 0.1.0
+ * @version 0.2.0
  */
 
 namespace xanadu2875\preteleporter;
@@ -15,6 +15,7 @@ use pocketmine\event;
 use pocketmine\utils\Config;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\level\Position;
+use pocketmine\level\Level;
 
 //　  ∧,,∧
 //　(；`・ω・）　　｡･ﾟ･⌒）
@@ -26,11 +27,6 @@ use pocketmine\level\Position;
  */
 class PreTeleporter Extends PluginBase implements event\Listener
 {
-  /**
-   * public バージョン管理
-   * @var string
-   */
-  public const VERSION = '0.1.0';
 
   private static $plugin;
 
@@ -101,7 +97,7 @@ class PreTeleporter Extends PluginBase implements event\Listener
   private function checkUpdate(): bool
   {
     $res = str_replace('\n', '', file_get_contents('https://raw.githubusercontent.com/Xanadu2875/VersionManager/master/PreTeleporter'));
-    return $res === self::VERSION ? false : true;
+    return $res === $this->getDescription()->getVersion() ? false : true;
   }
 
   /**
@@ -134,7 +130,7 @@ class PreTeleporter Extends PluginBase implements event\Listener
   public function addCo(string $name, int $x, int $y, int $z, Level $level): bool
   {
     foreach($this->co as $co) if($co['name'] === $name) return false;
-    
+
     $this->co[] = ["name" => $name, "x" => $x, "y" => $y, "z" => $z, "level" => $level->getName()];
 
     return true;
@@ -148,7 +144,7 @@ class PreTeleporter Extends PluginBase implements event\Listener
       {
         $player = $event->getPlayer();
         $data = \json_decode($pk->formData);
-        if($data === 0)
+        if($data === 0 && $data === null)
         {
           return;
         }
@@ -156,7 +152,7 @@ class PreTeleporter Extends PluginBase implements event\Listener
         {
           $co = $this->co[$data - 1];
           $player = $event->getPlayer();
-          if(isset($co['x']) && isset($co['y']) && isset($co['z']) && isset($co['world']))
+          if(isset($co['x']) && isset($co['y']) && isset($co['z']) && isset($co['level']))
           {
             $player->teleport(new Position((int)$co['x'], (int)$co['y'], (int)$co['z'], $this->getServer()->getLevelByName($co['world'])));
             $player->sendMessage("{$co['name']}にテレポートしました");
