@@ -154,7 +154,7 @@ class PreTeleporter Extends PluginBase implements event\Listener
           $player = $event->getPlayer();
           if(isset($co['x']) && isset($co['y']) && isset($co['z']) && isset($co['level']))
           {
-            $player->teleport(new Position((int)$co['x'], (int)$co['y'], (int)$co['z'], $this->getServer()->getLevelByName($co['world'])));
+            $player->teleport(new Position((int)$co['x'], (int)$co['y'], (int)$co['z'], $this->getServer()->getLevelByName($co['level'])));
             $player->sendMessage("{$co['name']}にテレポートしました");
           }
         }
