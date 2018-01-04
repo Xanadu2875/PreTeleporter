@@ -13,6 +13,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\Player;
 use pocketmine\event;
 use pocketmine\utils\Config;
+use pocketmine\utils\Utils;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\level\Position;
 use pocketmine\level\Level;
@@ -96,7 +97,7 @@ class PreTeleporter Extends PluginBase implements event\Listener
    */
   private function checkUpdate(): bool
   {
-    $res = str_replace('\n', '', file_get_contents('https://raw.githubusercontent.com/Xanadu2875/VersionManager/master/PreTeleporter'));
+    $res = str_replace('\n', '', Utils::getURL('https://raw.githubusercontent.com/Xanadu2875/VersionManager/master/PreTeleporter'));
     return $res === $this->getDescription()->getVersion() ? false : true;
   }
 
@@ -144,7 +145,7 @@ class PreTeleporter Extends PluginBase implements event\Listener
       {
         $player = $event->getPlayer();
         $data = \json_decode($pk->formData);
-        if($data === 0 && $data === null)
+        if($data == 0 && $data == null)
         {
           return;
         }
