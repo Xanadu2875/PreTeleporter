@@ -1,6 +1,6 @@
 name: PreTeleporter
 main: xanadu2875\preteleporter\PreTeleporter
-version: 0.2.0
+version: 0.2.1
 api:
 - 2.0.0
 - 3.0.0
@@ -16,7 +16,7 @@ api:
 - 3.0.0-ALPHA10
 author: Xanadu2875
 description: あらかじめ設定された場所にGUIを使いテレポートできます
-website: https://forum.pmmp.ga/d/42-preteleporter
+website: https://forum.mcbe.jp/resources/18/
 
 permission:
   preteleporter.*:
