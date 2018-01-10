@@ -1,6 +1,6 @@
 name: PreTeleporter
 main: xanadu2875\preteleporter\PreTeleporter
-version: 0.2.1
+version: 0.3.0
 api:
 - 2.0.0
 - 3.0.0
@@ -21,15 +21,13 @@ website: https://forum.mcbe.jp/resources/18/
 permission:
   preteleporter.*:
     default: op
-    description:
-      children:
-        preteleporter.command.*:
-          default: op
-          description:
-          children:
-            preteleporter.command.ptp:
-              default: true
-              description:
-            preteleporter.command.setptp:
-              default: op
-              description:
+    children:
+      preteleporter.command.*:
+        default: op
+        children:
+          preteleporter.command.ptp:
+            default: true
+          preteleporter.command.setptp:
+            default: op
+          preteleporter.command.deltpt:
+            default: op

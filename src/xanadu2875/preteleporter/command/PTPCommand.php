@@ -22,7 +22,7 @@ class PTPCommand extends command\PluginCommand
   public function execute(command\CommandSender $sender, string $commandLabel, array $args): bool
   {
     if($sender instanceof Player){
-      $this->getPlugin()->sendTPTUI($sender);
+      $this->getPlugin()->sendPTPUI($sender);
       return true;
     }
 

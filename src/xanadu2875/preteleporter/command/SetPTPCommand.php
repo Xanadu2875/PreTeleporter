@@ -5,6 +5,7 @@ namespace xanadu2875\preteleporter\command;
 use pocketmine\command;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
+use pocketmine\level\Position;
 
 class SetPTPCommand extends command\PluginCommand
 {
@@ -12,10 +13,10 @@ class SetPTPCommand extends command\PluginCommand
   {
     parent::__construct("setptp", $owner);
     $this->setPermission("preteleporter.command.setptp");
-    $this->setPermissionMessage("You don't have ");
-    $this->setDescription("座標と名前を設定します");
-    $this->setUsage("/setptp <name>\nExample: /setptp ロビー - 自分の座標の位置をロビーという名前で登録できます(OP専用)");
-    $this->setAliases(["setPreTeleporter", "setPreTP", "setPTP"]);
+    $this->setPermissionMessage("権限がありません");
+    $this->setDescription("PTPに名前をつけて設定します");
+    $this->setUsage("/setptp <name>\nExample: /setptp ロビー");
+    $this->setAliases(["sptp"]);
   }
 
   public function execute(command\CommandSender $sender, string $commandLabel, array $args): bool
@@ -24,7 +25,7 @@ class SetPTPCommand extends command\PluginCommand
     {
       if($sender instanceof Player)
       {
-        if(!$this->getPlugin()->addCo($args[0], (int)$sender->x, (int)$sender->y, (int)$sender->z, $sender->getLevel()))
+        if(!$this->getPlugin()->addPTP($args[0], $sender->getPosition()))
         {
           $sender->sendMessage("登録がキャンセルされました。その名前は既に登録されています");
           return false;
@@ -38,11 +39,14 @@ class SetPTPCommand extends command\PluginCommand
         }
         if($level = $this->getPlugin()->getServer()->getLevelByName($args[4]))
         {
-          if(!$this->getPlugin()->addCo($args[0], (int)$args[1], (int)$args[2], (int)$args[3], $level))
+          if(!$this->getPlugin()->addPTP($args[0], new Position((int)$args[1], (int)$args[2], (int)$args[3], $level)))
           {
             $sender->sendMessage("登録がキャンセルされました。その名前は既に登録されています");
-            return false;
           }
+        }
+        else
+        {
+          $sender->sendMessage("存在しないワールドです");
         }
       }
       $sender->sendMessage("登録しました");

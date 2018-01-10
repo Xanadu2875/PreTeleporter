@@ -47,9 +47,9 @@ class PreTeleporter Extends PluginBase implements event\Listener
       $this->co = [];
     }
 
-    if(!$this->checkUpdate())
+    if(!$this->checkUpdata())
     {
-      $this->getLogger()->notice("新しいバージョンがリリースされています Check!! ⇒ https://forum.pmmp.ga/d/42-preteleporter");
+      $this->getLogger()->notice("新しいバージョンがリリースされています！ ⇒ " . $this->getDescription()->getWebsite());
     }
   }
 
@@ -66,7 +66,7 @@ class PreTeleporter Extends PluginBase implements event\Listener
   public function onDisable()
   {
     $config = new Config($this->getDataFolder() . "Coordinate.json", Config::JSON);
-    $config->setAll($this->co);
+    $config->setAll(array_values($this->co));
     $config->save();
   }
 
@@ -83,6 +83,7 @@ class PreTeleporter Extends PluginBase implements event\Listener
     $map = $this->getServer()->getCommandMap();
     $commands = [
       "setptp" => "xanadu2875\preteleporter\command\SetPTPCommand",
+      "delptp" => "xanadu2875\preteleporter\command\DeletePTPCommand",
       "ptp" => "xanadu2875\preteleporter\command\PTPCommand"
     ];
     foreach($commands as $cmd => $class)
@@ -95,22 +96,19 @@ class PreTeleporter Extends PluginBase implements event\Listener
    * checkUpdate アップデートがあるかチェックします
    * @return bool あったらtrue
    */
-  private function checkUpdate(): bool
-  {
-    $res = str_replace('\n', '', Utils::getURL('https://raw.githubusercontent.com/Xanadu2875/VersionManager/master/PreTeleporter'));
-    return $res === $this->getDescription()->getVersion() ? false : true;
-  }
+  private function checkUpdata() : bool { return str_replace("\n", "",Utils::getURL("https://raw.githubusercontent.com/Xanadu2875/VersionManager/master/PreTeleporter.txt" . '?' . time() . mt_rand())) === $this->getDescription()->getVersion(); }
 
   /**
    * sendTPTUI プレイヤーに項目をUIで送ります
    * @param Player $player 送るプレイヤー
    */
-  public function sendTPTUI(Player $player): void
+  public function sendPTPUI(Player $player): void
   {
+    $this->co = array_values($this->co);
+
     $form = UI::createSimpleForm(2875);
     $form->setTitle("PreTeleporter");
-    $form->setContent("");
-
+    $form->setContent("テレポート先を選択してください");
     $form->addButton('やめる');
     foreach($this->co as $data)
     {
@@ -128,13 +126,28 @@ class PreTeleporter Extends PluginBase implements event\Listener
    * @param  array $array 座標が入った配列
    * @return bool         できたかどうか
    */
-  public function addCo(string $name, int $x, int $y, int $z, Level $level): bool
+  public function addPTP(string $name, Position $pos): bool
   {
     foreach($this->co as $co) if($co['name'] === $name) return false;
 
-    $this->co[] = ["name" => $name, "x" => $x, "y" => $y, "z" => $z, "level" => $level->getName()];
+    $this->co[] = ["name" => $name, "x" => $pos->x, "y" => $pos->y, "z" => $pos->z, "level" => $pos->getLevel()->getName()];
 
     return true;
+  }
+
+  public function deletePTP(string $name) : bool
+  {
+    foreach($this->co as $key => $co)
+    {
+      if($co["name"] === $name)
+      {
+        unset($this->co[$key]);
+        $this->co = array_values($this->co);
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public function onReceiveData(event\server\DataPacketReceiveEvent $event)
@@ -151,12 +164,25 @@ class PreTeleporter Extends PluginBase implements event\Listener
         }
         else
         {
-          $co = $this->co[$data - 1];
-          $player = $event->getPlayer();
-          if(isset($co['x']) && isset($co['y']) && isset($co['z']) && isset($co['level']))
+          if($co = $this->co[$data - 1])
           {
-            $player->teleport(new Position((int)$co['x'], (int)$co['y'], (int)$co['z'], $this->getServer()->getLevelByName($co['level'])));
-            $player->sendMessage("{$co['name']}にテレポートしました");
+            $player = $event->getPlayer();
+            if(isset($co['x']) && isset($co['y']) && isset($co['z']) && isset($co['level']))
+            {
+              if($level = $this->getServer()->getLevelByName($co['level']))
+              {
+                $player->teleport(new Position((int)$co['x'], (int)$co['y'], (int)$co['z'], $level));
+                $player->sendMessage("{$co['name']}にテレポートしました");
+              }
+              else
+              {
+                $player->sendMessage("broken");
+              }
+            }
+            else
+            {
+              $player->sendMessage("broken");
+            }
           }
         }
       }
